@@ -12,14 +12,18 @@ def inlst(lst, value, key=lambda x:x):
                 return i
         return -1
 
+recipes = {}
+
 def main():
+
+    global recipes
 
     prog = re.compile(r'"(.+?)"')
     progcnt = re.compile(r'@count:([0-9]+?)')
 
 
 
-    print(r'''    IC2合成计算器 alpha v1.0
+    print(r'''    IC2合成计算器 alpha v1.0.1
     作者: 墨滢
     详细使用说明见“使用说明.txt”
     发现bug请将截图发给我，十分感谢
@@ -465,10 +469,10 @@ def main():
                         else:
                             newlst[item] = math.ceil(lst[key]/outcnt)*ins[item]
                     if inlst(dopath, key, lambda x:x[0][0]) == -1:
-                        dopath.insert(0,[[key,outcnt*math.ceil(lst[key]/outcnt)*ins[item]],temp])
+                        dopath.insert(0,[[key,outcnt*math.ceil(lst[key]/outcnt)],temp])
                     else:
                         index = inlst(dopath, key, lambda x:x[0][0])
-                        dopath[index][0][1] += outcnt*math.ceil(lst[key]/outcnt)*ins[item]
+                        dopath[index][0][1] += outcnt*math.ceil(lst[key]/outcnt)
                         for kk in temp:
                             dopath[index][1][kk] += temp[kk]
             lst = newlst

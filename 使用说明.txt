@@ -1,4 +1,4 @@
-当前版本: alpha v1.0
+当前版本: alpha v1.0.1
 作者: 墨滢
 联系方式: QQ 741744469  邮箱 741744469@qq.com
 github: https://github.com/Moying-moe/minecraft_IC2_recipes_calculator/
