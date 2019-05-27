@@ -23,9 +23,9 @@ def main():
 
 
 
-    print(r'''    IC2合成计算器 alpha v1.0.1
+    print(r'''    IC2合成计算器 alpha v1.0.3
     作者: 墨滢
-    详细使用说明见“使用说明.txt”
+    详细使用说明见“使用说明.txt”，更新见“更新记录.txt”
     发现bug请将截图发给我，十分感谢
 ''')
 
@@ -416,7 +416,65 @@ def main():
     print('[INFO]合成表 金属成型机: %s条'%(len(recipes)-tlrecipes))
     tlrecipes = len(recipes)
 
+    # 读取高级太阳能合成表
 
+    with open('./config/高级太阳能.ini','r',encoding='utf-8') as f:
+        data = f.read()
+
+    for key in oredict:
+        data = data.replace(key,oredict[key])
+
+    data = data.replace('\\\n','').replace('  ',' ').splitlines()
+
+    for e in data:
+        e = e.strip()
+        if len(e) == 0:
+            continue
+        if e[0] == ';':
+            continue
+
+        left,right = e.split('=')
+        left = left.strip()
+        right = right.strip()
+        right = right.split(',')
+
+        outname = translate[left]
+        if outname in recipes:
+            temp = recipes[outname][0]
+        else:
+            temp = []
+
+        for inp in right:
+            itemcnt = {}
+            
+            _t = prog.search(inp)
+            table = _t.group(1).replace('|','')
+            inp = inp[_t.span()[1]:].strip()
+            if inp.count('@count') == 0:
+                outcnt = 1
+            else:
+                _t = progcnt.search(inp)
+                outcnt = int(_t.group(1))
+                inp = inp[:_t.span()[0]]
+
+            inp = inp.replace('@*','').strip()
+
+            inp = inp.split(' ')
+
+            for initem in inp:
+                sign,ininame = initem.split(':',1)
+                itemcnt[translate[ininame]] = table.count(sign)
+            temp.append((itemcnt,outcnt))
+
+        if outname == '生碳网':
+            print(temp)
+        recipes[outname] = temp,'合成台'
+
+    print('[INFO]合成表 高级太阳能: %s条'%(len(recipes)-tlrecipes))
+    tlrecipes = len(recipes)
+
+
+    # 附加规则
     recipes['青铜锭'] = [({'青铜粉':1},1)],'熔炉'
     recipes['青铜粉'] = ([({'锡粉': 1, '铜粉': 3}, 4)], '合成台')
     recipes['铜粉'] = ([({'铜锭': 1}, 1)], '合成台')
